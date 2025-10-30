@@ -1,15 +1,39 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
-import { Mail, Lock } from 'lucide-react';
+import { Mail, Lock,Loader } from 'lucide-react';
+import {userContext} from '../store/user.context.jsx';
+import { useContext } from "react";
+
 
 export const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const navigate = useNavigate();
+    const { login, isLoading, error, setError } = useContext(userContext);
 
-    const handleLogin = (e) => {
+    const handleLogin = async(e) => {
         e.preventDefault();
+
+        if(email === '' || password === ''){
+            
+            setError("All Input should be filled")
+            return;
+        }
+
+        try {
+            const response = await login(email, password);
+            
+            if(response.success){
+                setError(null);
+                navigate("/Dashboard")
+            }else{
+                console.log("Login failed")
+            }
+           
+        } catch (error) {
+            console.log("error in handleLogin", error);
+        }
     }
 
     return (
@@ -29,12 +53,8 @@ export const Login = () => {
 
                     <div className="mt-5 flex items-center border-b pb-2 border-gray-300 ">
                         <Lock className="w-5 h-5 text-gray-500" />
-                        <input 
-                            type="password" 
-                            placeholder="Enter your password" 
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="ml-3 w-full outline-none"
+                        <input className="ml-3 w-full outline-none"type="password" placeholder="Enter your password" 
+                        value={password} onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
 
@@ -43,14 +63,23 @@ export const Login = () => {
                         className="w-full mt-6 hover:bg-orange-600 bg-orange-500 text-white font-semibold py-2 rounded 
                         transition-colors duration-200 cursor-pointer"
                     >
-                        Login
+                        {isLoading ? <Loader className="m-auto animate-spin"/> : "Login"}
                     </button>
                 </form>
+
+                {error && (
+                    <div className="text-red-700 ">
+                        {error}
+                    </div>
+                )}
 
                 <p className="text-center text-gray-400 mt-6">
                     Don't have a account?{' '}
                     <button 
-                        onClick={() => navigate('/Signup')}
+                        onClick={() => {
+                            setError(null)
+                            navigate('/Signup')
+                        }}
                         className="text-blue-400 hover:underline"
                     >
                         Signup

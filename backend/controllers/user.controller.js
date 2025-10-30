@@ -51,7 +51,6 @@ export const login = async(req,res) => {
         if(!user){
             return res.status(404).json({success : false, msg : "User not found"});
         }
-        console.log(user.password + " " + password);
         
         const isMatchedPassword = await bcrypt.compare(password, user.password);
 
@@ -88,7 +87,8 @@ export const createTodo = async(req,res) => {
             if (isNaN(parsedDate.getTime())) {
                 return res.status(400).json({ 
                     success: false, 
-                    msg: "Invalid date format" 
+                    msg: 
+                    "Invalid date format" 
                 });
             }
             
@@ -108,7 +108,7 @@ export const createTodo = async(req,res) => {
             userId : req.userId
         }
 
-        const todo = new todoModel(todos);
+        const todo = new todoModel(todos);  
         await todo.save();
 
         return res.status(200).json({success : true, msg : "Todo have been saved successfully", todo});
@@ -224,3 +224,15 @@ export const isCompleted = async (req, res) => {
         return res.status(400).json({ success: false, msg: "Error in isCompleted" });
     }
 };
+
+export const verify = async (req,res) => {
+    if(!req.userId){
+        return res.json({success : false, msg : "userId is missing in req body"});
+    }
+    try {
+        return res.json({success : true, msg : "User is verified"})
+    } catch (error) {
+        console.log("error in verify", error);
+        return res.status(500).json({success : false, msg : "error in verify"});
+    }
+}

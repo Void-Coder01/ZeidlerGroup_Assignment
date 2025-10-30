@@ -1,6 +1,7 @@
-import { useState } from "react"
+import { useState, useContext } from "react"
 import { useNavigate } from "react-router-dom";
-import { User, Mail, Lock } from 'lucide-react';
+import { User, Mail, Lock, Loader } from 'lucide-react';
+import { userContext } from "../store/user.context";
 
 export const Signup = () => {
     const [name, setName] = useState('');
@@ -9,8 +10,30 @@ export const Signup = () => {
 
     const navigate = useNavigate();
 
-    const handleSignup = (e) => {
+    const {signup, isLoading, error,setError } = useContext(userContext)
+
+    const handleSignup = async(e) => {
         e.preventDefault();
+
+         if(email === '' || password === '' || name === ''){
+            setError("All Input should be filled")
+            return;
+        }
+
+        try {
+            
+            const res = await signup(name, email, password);
+
+            if(res.success){
+                setError(null);
+                navigate('/login');
+            }else{
+                console.log("error in handlesignup")
+            }
+        
+        } catch (error) {
+            console.log("error in handlesignup" ,error);
+        }
     }
 
     return (
@@ -48,15 +71,22 @@ export const Signup = () => {
                         className=" mt-6 w-full hover:bg-orange-600 bg-orange-500 text-white font-semibold py-2 rounded  cursor-pointer
                         transition-all duration-200     "
                     >
-                        Sign up
+                        {isLoading ? <Loader className="m-auto animate-spin"/> : "Signup"}
                     </button>
                 </form>
 
+                {error && (
+                    <div className=" text-red-700 ">
+                        {error}
+                    </div>
+                )}
 
                 <p className="mt-6 text-gray-400 text-center ">
                     Already have an account?{' '}
                     <button 
-                        onClick={() => navigate('/login')}
+                        onClick={() => {
+                            setError(null);
+                            navigate('/login')}}
                         className="text-blue-400 hover:underline"
                     >
                         Login
