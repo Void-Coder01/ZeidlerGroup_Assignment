@@ -48,11 +48,11 @@ cd backend
 create a .env file 
 ```
 Edit the `.env` file and add your credentials:
-- `MONGODB_URI` - Your MongoDB connection string
+- `PORT` - Your Port number to run the application
+- `MONGO_URI` - Your MongoDB connection string
 - `JWT_SECRET` - Any random secure string
 - `EMAIL_USER` - Your Gmail address
-- `EMAIL_PASS` - Gmail App Password
-- 
+- `EMAIL_PASSWORD` - Gmail App Password
 The default configuration should work for local development.
 
 ### 4. Run the Application
