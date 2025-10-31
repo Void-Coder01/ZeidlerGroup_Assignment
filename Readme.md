@@ -90,9 +90,11 @@ http://localhost:5173
 ZeidlerGroup_Assignment/
 ├── backend/
 │   ├── controllers/
-│   ├── models/
+│   ├── db/
 │   ├── routes/
 │   ├── middleware/
+│   ├── services/
+│   ├── Utils/
 │   ├── .env.example
 │   └── index.js
 ├── frontend/
