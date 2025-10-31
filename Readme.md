@@ -120,9 +120,7 @@ ZeidlerGroup_Assignment/
 
 ## Environment Variables
 
-Refer to `.env.example` files in both `backend` and `frontend` folders for required environment variables.
-
-**Note:** Never commit `.env` files to version control. They contain sensitive credentials.
+Refer to `.env.example` file in for required environment variables.
 
 ## Gmail App Password Setup
 
