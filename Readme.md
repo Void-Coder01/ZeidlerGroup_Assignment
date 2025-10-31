@@ -45,19 +45,14 @@ npm install
 **Backend:**
 ```bash
 cd backend
-cp .env.example .env
+create a .env file 
 ```
 Edit the `.env` file and add your credentials:
 - `MONGODB_URI` - Your MongoDB connection string
 - `JWT_SECRET` - Any random secure string
 - `EMAIL_USER` - Your Gmail address
 - `EMAIL_PASS` - Gmail App Password
-
-**Frontend:**
-```bash
-cd frontend
-cp .env.example .env
-```
+- 
 The default configuration should work for local development.
 
 ### 4. Run the Application
