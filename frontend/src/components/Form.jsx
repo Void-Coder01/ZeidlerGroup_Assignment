@@ -1,32 +1,45 @@
 import { X } from 'lucide-react';
-import { useContext } from 'react';
-import { useState } from "react"
-import { userContext } from '../store/user.context';
+import { useState, useEffect } from "react"
 import axios from 'axios';
 
-export const Form = () => {
+export const Form = ({ editingTodo, onCancel, onSuccess }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [dueDate, setDueDAte] = useState('');
+    const [dueDate, setDueDate] = useState('');
     const [dueTime, setDueTime] = useState('');
-    const [editingTodo, setEditingTodo] = useState(null);
-    const { setShowForm,getTodo } = useContext(userContext);
 
     const URL = "http://localhost:5000/user"
+
+    useEffect(() => {
+        if (editingTodo) {
+            setTitle(editingTodo.title);
+            setDescription(editingTodo.description || '');
+            
+            if (editingTodo.due_date) {
+                const date = new Date(editingTodo.due_date);
+                setDueDate(date.toISOString().split('T')[0]);
+
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                
+                setDueTime(`${hours}:${minutes}`);
+            }
+        }
+    }, [editingTodo]);
 
     const resetForm = () => {
         setTitle('');
         setDescription('');
-        setDueDAte('');
+        setDueDate('');
         setDueTime('');
-        setShowForm(false);
+        onCancel(); 
     }
 
     const handleSubmit = async(e) => {
         e.preventDefault();
 
-        if(!title){
-            alert('title is required')
+        if(!title.trim()){
+            alert('Title is required');
             return;
         }
 
@@ -37,42 +50,41 @@ export const Form = () => {
                 const dateTimeString = `${dueDate}T${dueTime}:00`;
                 const dateAndTime = new Date(dateTimeString);
                 due_Date_time = dateAndTime.toISOString();    
-            }else{
-                alert("Please provide a due time")
-                return;
+            } else {
+                const dateTimeString = `${dueDate}T00:00:00`;
+                const dateAndTime = new Date(dateTimeString);
+                due_Date_time = dateAndTime.toISOString();
             }
         }
 
         const todoData = {
-            title : title,
-            description : description || null,
-            due_date : due_Date_time,
-            isCompleted : false
+            title: title,
+            description: description || null,
+            due_date: due_Date_time
         }
-
 
         try {
             if(editingTodo){
-                await axios.post(`${URL}/update/${editingTodo._id}`, todoData, {
-                    withCredentials :true
-                })
-            }else{
+                await axios.put(`${URL}/update/${editingTodo._id}`, todoData, {
+                    withCredentials: true
+                });
+            } else {
                 await axios.post(`${URL}/todo`, todoData, {
-                    withCredentials:true
-                })
+                    withCredentials: true
+                });
             }
 
             resetForm();
-            getTodo();
+            onSuccess();
         } catch (error) {
-            console.error("Erro while adding todo", error);
+            console.error("Error while adding todo", error);
             alert("Failed to save todo");
         }
     }
 
     return (
-        <div className="bg-white rounded-lg mb-6 shadow-xl p-6 max-w-6xl mx-auto backdrop-blur-xl mt-5">
-            <div className="flex justify-between">
+        <div className="bg-white rounded-lg mb-6 shadow-xl p-6 max-w-6xl mx-auto backdrop-blur-xl ">
+             <div className="flex justify-between">
                 <h3 className="text-lg">{editingTodo ? "Edit Task" : "Add Task"}</h3>
                 <button onClick={resetForm}>
                     < X className='size-5'/>
@@ -81,27 +93,28 @@ export const Form = () => {
 
             <form onSubmit={handleSubmit}>
                 <div className='mt-4'>
-                    <input type="text" placeholder='Title' value={title} 
-                    onChange={(e) => {setTitle(e.target.value)}}  
-                    className='outline-none w-full border-b focus:border-orange-500'/>
-                </div>
-
-
-                <div className='mt-4'>
-                    <textarea name="description" id="description" 
-                    className='border pb-2 outline-none focus:border-orange-500 w-full '
-                    placeholder='Description' 
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
+                    <input 
+                        type="text" placeholder='Task title *' value={title} onChange={(e) => setTitle(e.target.value)}  
+                        className='outline-none w-full border-b pb-2 focus:border-orange-500'
+                        required
                     />
                 </div>
 
+                <div className='mt-4'>
+                    <textarea 
+                        name="description" id="description" 
+                        className='border rounded p-2 outline-none focus:border-orange-500 w-full'
+                        placeholder='Description' 
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                    />
+                </div>
 
                 <div className="flex gap-9 mt-4">
                     <div>
                         <p className="block text-sm  ">Due Date</p>
                         <input type="date" value={dueDate}
-                            onChange={(e) => setDueDAte(e.target.value)}
+                            onChange={(e) => setDueDate(e.target.value)}
                             className="w-full border rounded p-2 outline-none focus:border-orange-500"
                         />
                     </div>
@@ -114,11 +127,10 @@ export const Form = () => {
                     </div>
                 </div>
 
-                <div className='flex gap-3 mt-4'>
+               <div className='flex gap-3 mt-4'>
                     <button type="submit" className='rounded bg-orange-500 text-white outline-none px-4 py-2'>submit</button>
                     <button onClick={resetForm} className='border-orange-500 border px-4 py-2'>Cancel</button>
                 </div>
-
             </form>
         </div>
     )

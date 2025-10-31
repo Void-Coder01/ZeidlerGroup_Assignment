@@ -8,9 +8,8 @@ const URL = "http://localhost:5000/user"
 export const UserContextProvider = ({children}) => {
 
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [error , setError] = useState(null);
-    const [showForm, setShowForm] = useState(false);
 
     useEffect(() => {
         setIsLoading(true);
@@ -123,9 +122,7 @@ export const UserContextProvider = ({children}) => {
                 error : error,
                 setError,
                 getTodo,
-                logout,
-                showForm,
-                setShowForm
+                logout
             }}>
             {children}
         </userContext.Provider>

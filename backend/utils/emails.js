@@ -15,13 +15,13 @@ export const sendReminderEmail = async (userEmail, taskTitle) => {
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: userEmail,
-            subject: `Reminder: 30 minutes to go for "${taskTitle}"'s expiry !`,
+            subject: `Reminder: 10 minutes to go for "${taskTitle}"'s expiry !`,
             html: `
                     <div style="max-width: 600px; margin: 0 auto; background-color: white; padding: 20px; border-radius: 10px;">
                         <h2>Task Reminder</h2>
                         <p>Hello!</p>
 
-                        <p>This is a reminder that your task <strong>${taskTitle}</strong> due date is in <strong>30 minutes</strong>:</p>
+                        <p>This is a reminder that your task <strong>${taskTitle}</strong> due date is in <strong>10 minutes</strong>:</p>
                         
                         <p>Don't forget to complete it on time!</p>
 

@@ -7,10 +7,10 @@ export const startReminderCron = () => {
   cron.schedule('* * * * *', async () => {
     try {
       const now = new Date();
-      const thirtyMinutesFromNow = new Date(now.getTime() + 30 * 60 * 1000);
+      const tenMinutesFromNow = new Date(now.getTime() + 10 * 60 * 1000);
 
       const upcomingTasks = await todoModel.find({
-        due_date: { $gte: now, $lte: thirtyMinutesFromNow },
+        due_date: { $gte: now, $lte: tenMinutesFromNow },
         isCompleted: false,
         reminderSent: false,
       }).populate('userId');

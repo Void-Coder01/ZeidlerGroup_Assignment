@@ -6,9 +6,11 @@ import App from './App.jsx'
 import { UserContextProvider } from './store/user.context.jsx'
 
 createRoot(document.getElementById('root')).render(
+  <StrictMode>
     <BrowserRouter>
       <UserContextProvider>
         <App />
       </UserContextProvider>    
-    </BrowserRouter>,
+    </BrowserRouter>
+  </StrictMode>,
 )
