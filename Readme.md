@@ -56,7 +56,7 @@ The default configuration should work for local development.
 **Terminal 1 - Start Backend:**
 cd backend
 npm start
-# OR for development with auto-reload
+OR for development with auto-reload
 npm run dev
 
 Backend will run on http://localhost:5000
