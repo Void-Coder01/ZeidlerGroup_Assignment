@@ -17,8 +17,7 @@ A full-stack web application that enables users to manage their tasks and receiv
 - Create, read, update, and delete todos
 - Set due dates and times for tasks
 - Mark tasks as complete
-- Email reminders 30 minutes before due time
-- Responsive design
+- Email reminders 10 minutes before due time
 
 ## Prerequisites
 
